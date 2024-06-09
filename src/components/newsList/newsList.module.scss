@@ -112,21 +112,15 @@
         .info {
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          // justify-content: space-between;
+          width: 100%;
 
           .date-source {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Added to align date left and source right */
             font-size: 0.8em;
             color: gray;
-
-            .date {
-              margin-right: 10px;
-            }
-
-            .source {
-              margin-left: 10px;
-            }
+            width: 100%; /* Make sure it takes the full width */
           }
 
           .title {
