@@ -22,15 +22,22 @@ No Results Message: Display a message when no articles match the applied filters
 
 ## Technologies Used
 React
+
 TypeScript
+
 SASS/SCSS
+
 Redux (for state management)
+
 Axios (for API calls)
+
 React Router (for routing)
+
 Setup and Installation
 
 ## Clone the repository:
 git clone https://github.com/nitindevskumaer/news-app.git
+
 cd react-news-app
 
 ## Install dependencies:
