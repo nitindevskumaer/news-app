@@ -38,7 +38,7 @@ Setup and Installation
 ## Clone the repository:
 git clone https://github.com/nitindevskumaer/news-app.git
 
-cd react-news-app
+cd news-app
 
 ## Install dependencies:
 npm install
