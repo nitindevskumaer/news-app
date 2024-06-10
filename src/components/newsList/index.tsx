@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNews } from "../../redux/newsSlice";
 import { RootState, AppDispatch } from "../../redux/store";
@@ -23,60 +23,68 @@ const NewsList: React.FC = () => {
     dispatch(fetchNews());
   }, [dispatch]);
 
-  const handleCategoryChange = (category: string) => {
+  const handleCategoryChange = useCallback((category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
         ? prev.filter((item) => item !== category)
         : [...prev, category]
     );
     setCurrentPage(1);
-  };
+  }, []);
 
-  const handleAuthorChange = (author: string) => {
+  const handleAuthorChange = useCallback((author: string) => {
     setSelectedAuthors((prev) =>
       prev.includes(author)
         ? prev.filter((item) => item !== author)
         : [...prev, author]
     );
     setCurrentPage(1);
-  };
+  }, []);
 
-  const handleSortByChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSortBy(event.target.value);
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const filteredArticles = articles
-    .filter((article) =>
-      selectedCategories.length
-        ? selectedCategories.includes(article.source)
-        : true
-    )
-    .filter((article) =>
-      selectedAuthors.length ? selectedAuthors.includes(article.author) : true
-    )
-    .sort((a, b) => {
-      if (sortBy === "date-desc") {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      } else if (sortBy === "date-asc") {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      } else if (sortBy === "title-asc") {
-        return a.title.localeCompare(b.title);
-      } else if (sortBy === "title-desc") {
-        return b.title.localeCompare(a.title);
-      }
-      return 0;
-    });
-
-  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
-  const displayedArticles = filteredArticles.slice(
-    (currentPage - 1) * articlesPerPage,
-    currentPage * articlesPerPage
+  const handleSortByChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSortBy(event.target.value);
+      setCurrentPage(1);
+    },
+    []
   );
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
+
+  const filteredArticles = useMemo(() => {
+    return articles
+      .filter((article) =>
+        selectedCategories.length
+          ? selectedCategories.includes(article.source)
+          : true
+      )
+      .filter((article) =>
+        selectedAuthors.length ? selectedAuthors.includes(article.author) : true
+      )
+      .sort((a, b) => {
+        if (sortBy === "date-desc") {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        } else if (sortBy === "date-asc") {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        } else if (sortBy === "title-asc") {
+          return a.title.localeCompare(b.title);
+        } else if (sortBy === "title-desc") {
+          return b.title.localeCompare(a.title);
+        }
+        return 0;
+      });
+  }, [articles, selectedCategories, selectedAuthors, sortBy]);
+
+  const totalPages = useMemo(() => Math.ceil(filteredArticles.length / articlesPerPage), [filteredArticles, articlesPerPage]);
+
+  const displayedArticles = useMemo(() => {
+    return filteredArticles.slice(
+      (currentPage - 1) * articlesPerPage,
+      currentPage * articlesPerPage
+    );
+  }, [filteredArticles, currentPage, articlesPerPage]);
 
   if (loading) {
     return (

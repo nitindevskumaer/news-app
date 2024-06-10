@@ -9,7 +9,7 @@ const Sidebar: React.FC<{
   onCategoryChange: (category: string) => void;
   onAuthorChange: (author: string) => void;
   onSortByChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({
+}> = React.memo(({ 
   selectedCategories,
   selectedAuthors,
   sortBy,
@@ -89,7 +89,7 @@ const Sidebar: React.FC<{
         <label>
           <input
             type="radio"
-            value="title-desc"
+            value="title_desc"
             checked={sortBy === "title-desc"}
             onChange={onSortByChange}
           />
@@ -98,6 +98,6 @@ const Sidebar: React.FC<{
       </div>
     </div>
   </div>
-);
+));
 
 export default Sidebar;
